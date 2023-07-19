@@ -1,4 +1,6 @@
-﻿namespace MDP.API.Model;
+﻿using MDP.Exceptions;
+
+namespace MDP.API.Model;
 
 public class ApiResponse
 {
@@ -14,6 +16,12 @@ public class ApiResponse<T> : ApiResponse
 
 public class Error
 {
+    public Error(ErrorCode code, string message)
+    {
+        Code = code.ToString();
+        Message = message;
+    }
+
     public Error(string code, string message)
     {
         Code = code;

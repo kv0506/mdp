@@ -4,7 +4,6 @@ using MDP.Manager.Contract;
 using MDP.OMDb.Contract;
 using MDP.ServiceModel;
 using MDP.Videos.Contract;
-using Microsoft.Extensions.Logging;
 
 namespace MDP.Manager;
 
@@ -14,16 +13,14 @@ public class MovieManager : IMovieManager
     private readonly IYoutubeService _youtubeService;
     private readonly ICacheClient _cacheClient;
     private readonly IMapper _mapper;
-    private readonly ILogger<MovieManager> _logger;
 
     public MovieManager(IOMDbService omdbService, IYoutubeService youtubeService, ICacheClient cacheClient,
-        IMapper mapper, ILogger<MovieManager> logger)
+        IMapper mapper)
     {
         _omdbService = omdbService;
         _youtubeService = youtubeService;
         _cacheClient = cacheClient;
         _mapper = mapper;
-        _logger = logger;
     }
 
     public Task<Movie?> GetByIdAsync(string title)
@@ -76,7 +73,7 @@ public class MovieManager : IMovieManager
     private async Task<IList<Movie>?> SearchMoviesInternalAsync(string query)
     {
         var omdbMoviesResponse = await _omdbService.SearchMoviesAsync(query);
-        if (omdbMoviesResponse.Any())
+        if (omdbMoviesResponse?.Any() ?? false)
         {
             return _mapper.Map<IList<Movie>>(omdbMoviesResponse);
         }

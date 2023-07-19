@@ -23,7 +23,7 @@ namespace MDP.API.Controllers
         public async Task<IActionResult> Search([FromQuery] string query)
         {
             var result = await _movieManager.SearchMoviesAsync(query);
-            return Ok(new ApiResponse<IList<Movie>> { IsSuccess = true, Result = result });
+            return OkResult(result);
         }
 
         [HttpGet, Route("{id}")]
@@ -32,13 +32,12 @@ namespace MDP.API.Controllers
         public async Task<IActionResult> GetByTitle([FromRoute] string id)
         {
             var result = await _movieManager.GetByIdAsync(id);
-            if (result == null)
-            {
-                return NotFound(new ApiResponse<Movie>
-                    { IsSuccess = false, Errors = new[] { new Error("NotFound", "Movie not found") } });
-            }
+            return OkResult(result);
+        }
 
-            return Ok(new ApiResponse<Movie> { IsSuccess = true, Result = result });
+        private IActionResult OkResult<T>(T result)
+        {
+            return Ok(new ApiResponse<T> { IsSuccess = true, Result = result });
         }
     }
 }

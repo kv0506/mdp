@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MDP.Caching\MDP.Caching.csproj" />
+    <ProjectReference Include="..\MDP.Exceptions\MDP.Exceptions.csproj" />
     <ProjectReference Include="..\MDP.Manager\MDP.Manager.csproj" />
     <ProjectReference Include="..\MDP.OMDbClient\MDP.OMDb.csproj" />
     <ProjectReference Include="..\MDP.ServiceModel\MDP.ServiceModel.csproj" />
@@ -22,7 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Model\" />
-    <Folder Include="Utils\" />
+    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>

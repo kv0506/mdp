@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
-using CSharpExtensions;
+using MDP.Exceptions;
 using MDP.OMDb.Contract;
 using MDP.OMDb.Model;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace MDP.OMDb;
@@ -11,49 +10,59 @@ public class OMDbService : IOMDbService
 {
     private readonly OMDbSettings _omdbSettings;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ILogger<OMDbService> _logger;
 
-    public OMDbService(IOptions<OMDbSettings> omdbSettings, IHttpClientFactory httpClientFactory, ILogger<OMDbService> logger)
+    public OMDbService(IOptions<OMDbSettings> omdbSettings, IHttpClientFactory httpClientFactory)
     {
         _omdbSettings = omdbSettings.Value;
         _httpClientFactory = httpClientFactory;
-        _logger = logger;
     }
 
-    public async Task<IList<OMDbMovie>> SearchMoviesAsync(string query)
+    public async Task<IList<OMDbMovie>?> SearchMoviesAsync(string query)
     {
         var httpClient = _httpClientFactory.CreateClient();
+
         var response = await httpClient.GetAsync($"{GetOMDbBaseUrl()}s={query}");
+        var responseContent = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode)
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
             var searchResult = JsonSerializer.Deserialize<SearchResponse>(responseContent);
-            return searchResult != null ? searchResult.Search : new List<OMDbMovie>();
+            if (searchResult != null)
+            {
+                if (searchResult.Response.IsTrue())
+                {
+                    return searchResult.Search;
+                }
+
+                throw new MDPException(ErrorCode.BadRequest, searchResult.Error);
+            }
         }
 
-        _logger.LogDebug($"No movies found for the query {query}");
-        return new List<OMDbMovie>();
+        throw new MDPException(ErrorCode.BadRequest, responseContent);
     }
 
     public async Task<OMDbMovie?> GetMovieByIdAsync(string id)
     {
         var httpClient = _httpClientFactory.CreateClient();
+
         var response = await httpClient.GetAsync($"{GetOMDbBaseUrl()}i={id}");
+        var responseContent = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode)
         {
-            var responseContent = await response.Content.ReadAsStringAsync();
             var movie = JsonSerializer.Deserialize<OMDbMovie>(responseContent);
-            if (movie != null && movie.Error.IsNullOrEmpty() &&
-                movie.Response.IsEquals(true.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (movie != null)
             {
-                return movie;
+                if (movie.Response.IsTrue())
+                {
+                    return movie;
+                }
+
+                throw new MDPException(ErrorCode.NotFound, movie.Error);
             }
         }
 
-        _logger.LogDebug($"No movie found by the id {id}");
-        return null;
+        throw new MDPException(ErrorCode.BadRequest, responseContent);
     }
 
     private string GetOMDbBaseUrl()

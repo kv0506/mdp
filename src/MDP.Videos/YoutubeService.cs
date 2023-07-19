@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
+using MDP.Exceptions;
 using MDP.ServiceModel;
 using MDP.Videos.Contract;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace MDP.Videos
@@ -12,13 +12,11 @@ namespace MDP.Videos
     {
         private readonly IMapper _mapper;
         private readonly YoutubeSettings _settings;
-        private readonly ILogger<YoutubeService> _logger;
 
-        public YoutubeService(IMapper mapper, IOptions<YoutubeSettings> settings, ILogger<YoutubeService> logger)
+        public YoutubeService(IMapper mapper, IOptions<YoutubeSettings> settings)
         {
             _mapper = mapper;
             _settings = settings.Value;
-            _logger = logger;
         }
 
         public async Task<IList<Video>?> SearchVideosAsync(string query)
@@ -42,10 +40,8 @@ namespace MDP.Videos
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                throw new MDPException(ErrorCode.BadRequest, ex);
             }
-
-            return null;
         }
     }
 }

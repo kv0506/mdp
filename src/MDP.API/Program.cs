@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using MDP.API.Middleware;
 using MDP.Caching;
 using MDP.Caching.Contract;
 using MDP.Manager;
@@ -35,13 +36,12 @@ builder.Services.AddAutoMapper(new[] { typeof(OMDbProfile).Assembly, typeof(Yout
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseAppExceptionHandler();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

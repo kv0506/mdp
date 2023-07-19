@@ -4,7 +4,7 @@ namespace MDP.OMDb.Contract;
 
 public interface IOMDbService
 {
-    Task<IList<OMDbMovie>> SearchMoviesAsync(string query);
+    Task<IList<OMDbMovie>?> SearchMoviesAsync(string query);
 
     Task<OMDbMovie?> GetMovieByIdAsync(string id);
 }
