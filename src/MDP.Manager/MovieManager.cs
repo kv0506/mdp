@@ -23,10 +23,10 @@ public class MovieManager : IMovieManager
         _mapper = mapper;
     }
 
-    public Task<Movie?> GetByIdAsync(string title)
+    public Task<Movie?> GetByTitleAsync(string title)
     {
         return GetDataFromCacheOrDataSourceAsync<Movie?>(GetCacheKey<Movie>(title),
-            () => GetByIdInternalAsync(title),
+            () => GetByTitleInternalAsync(title),
             TimeSpan.FromHours(2));
     }
 
@@ -53,9 +53,9 @@ public class MovieManager : IMovieManager
         return data;
     }
 
-    private async Task<Movie?> GetByIdInternalAsync(string id)
+    private async Task<Movie?> GetByTitleInternalAsync(string id)
     {
-        var movieResponse = await _omdbService.GetMovieByIdAsync(id);
+        var movieResponse = await _omdbService.GetMovieByTitleAsync(id);
         if (movieResponse != null)
         {
             var movie = _mapper.Map<Movie>(movieResponse);

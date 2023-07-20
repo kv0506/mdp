@@ -6,5 +6,5 @@ public interface IOMDbService
 {
     Task<IList<OMDbMovie>?> SearchMoviesAsync(string query);
 
-    Task<OMDbMovie?> GetMovieByIdAsync(string id);
+    Task<OMDbMovie?> GetMovieByTitleAsync(string title);
 }

@@ -26,12 +26,12 @@ namespace MDP.API.Controllers
             return OkResult(result);
         }
 
-        [HttpGet, Route("{id}")]
+        [HttpGet, Route("{title}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ApiResponse<Movie>))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse))]
-        public async Task<IActionResult> GetByTitle([FromRoute] string id)
+        public async Task<IActionResult> GetByTitle([FromRoute] string title)
         {
-            var result = await _movieManager.GetByIdAsync(id);
+            var result = await _movieManager.GetByTitleAsync(title);
             return OkResult(result);
         }
 

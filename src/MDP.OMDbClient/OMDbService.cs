@@ -41,11 +41,11 @@ public class OMDbService : IOMDbService
         throw new MDPException(ErrorCode.BadRequest, responseContent);
     }
 
-    public async Task<OMDbMovie?> GetMovieByIdAsync(string id)
+    public async Task<OMDbMovie?> GetMovieByTitleAsync(string title)
     {
         var httpClient = _httpClientFactory.CreateClient();
 
-        var response = await httpClient.GetAsync($"{GetOMDbBaseUrl()}i={id}");
+        var response = await httpClient.GetAsync($"{GetOMDbBaseUrl()}t={title}");
         var responseContent = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode)
