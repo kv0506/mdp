@@ -6,6 +6,6 @@ namespace MDP.Manager.Contract
     {
         Task<IList<Movie>?> SearchMoviesAsync(string query);
 
-        Task<Movie?> GetByTitleAsync(string title);
+        Task<Movie?> GetMovieByTitleAsync(string title);
     }
 }

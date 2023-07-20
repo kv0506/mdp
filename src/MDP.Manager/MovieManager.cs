@@ -4,6 +4,7 @@ using MDP.Manager.Contract;
 using MDP.OMDb.Contract;
 using MDP.ServiceModel;
 using MDP.Videos.Contract;
+using System.Collections;
 
 namespace MDP.Manager;
 
@@ -23,7 +24,7 @@ public class MovieManager : IMovieManager
         _mapper = mapper;
     }
 
-    public Task<Movie?> GetByTitleAsync(string title)
+    public Task<Movie?> GetMovieByTitleAsync(string title)
     {
         return GetDataFromCacheOrDataSourceAsync<Movie?>(GetCacheKey<Movie>(title),
             () => GetByTitleInternalAsync(title),
@@ -53,9 +54,9 @@ public class MovieManager : IMovieManager
         return data;
     }
 
-    private async Task<Movie?> GetByTitleInternalAsync(string id)
+    private async Task<Movie?> GetByTitleInternalAsync(string title)
     {
-        var movieResponse = await _omdbService.GetMovieByTitleAsync(id);
+        var movieResponse = await _omdbService.GetMovieByTitleAsync(title);
         if (movieResponse != null)
         {
             var movie = _mapper.Map<Movie>(movieResponse);
@@ -88,6 +89,12 @@ public class MovieManager : IMovieManager
 
     private string GetCacheKey<T>(string key)
     {
-        return $"{nameof(T)}:{key}";
+        var type = typeof(T);
+        if (type.IsGenericType && type.GetInterfaces().Any(x => x.Name == nameof(IEnumerable)))
+        {
+            return $"{nameof(IEnumerable)}:{type.GenericTypeArguments.First().Name}:{key}";
+        }
+
+        return $"{type.Name}:{key}";
     }
 }

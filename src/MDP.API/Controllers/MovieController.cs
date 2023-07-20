@@ -31,7 +31,7 @@ namespace MDP.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiResponse))]
         public async Task<IActionResult> GetByTitle([FromRoute] string title)
         {
-            var result = await _movieManager.GetByTitleAsync(title);
+            var result = await _movieManager.GetMovieByTitleAsync(title);
             return OkResult(result);
         }
 
