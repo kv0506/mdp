@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDP.Exceptions", "MDP.Excep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDP.Manager.Tests", "MDP.Manager.Tests\MDP.Manager.Tests.csproj", "{DDEC08CD-8100-4627-AB76-3F700E85B9A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDP.OMDb.Tests", "MDP.OMDb.Tests\MDP.OMDb.Tests.csproj", "{1E231170-6BBE-4CAD-8C43-FBF14CAD8A07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{DDEC08CD-8100-4627-AB76-3F700E85B9A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDEC08CD-8100-4627-AB76-3F700E85B9A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDEC08CD-8100-4627-AB76-3F700E85B9A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E231170-6BBE-4CAD-8C43-FBF14CAD8A07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E231170-6BBE-4CAD-8C43-FBF14CAD8A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E231170-6BBE-4CAD-8C43-FBF14CAD8A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E231170-6BBE-4CAD-8C43-FBF14CAD8A07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
