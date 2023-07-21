@@ -1,4 +1,4 @@
-# mdp
+# MDP
 Movie Search Platform API
 
 This is a ASP.NET Core based Web Api application.
