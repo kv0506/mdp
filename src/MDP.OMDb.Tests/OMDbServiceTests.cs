@@ -3,6 +3,7 @@ using MDP.Exceptions;
 using MDP.OMDb.Contract;
 using Microsoft.Extensions.Options;
 using Moq;
+using Moq.AutoMock;
 using Moq.Contrib.HttpClient;
 using Shouldly;
 
@@ -17,16 +18,18 @@ namespace MDP.OMDb.Tests
         [OneTimeSetUp]
         public void SetupFixture()
         {
-            _messageHandlerMock = new Mock<HttpMessageHandler>();
-            var factory = _messageHandlerMock.CreateClientFactory();
+            var mocker = new AutoMocker();
 
-            var settings = Options.Create(new OMDbSettings
+            mocker.Use(Options.Create(new OMDbSettings
             {
                 ApiKey = "12548",
                 ApiUrl = "http://www.omdbapi.com/"
-            });
+            }));
 
-            _omdbService = new OMDbService(settings, factory);
+            _messageHandlerMock = new Mock<HttpMessageHandler>();
+            mocker.Use(_messageHandlerMock.CreateClientFactory());
+
+            _omdbService = mocker.CreateInstance<OMDbService>();
         }
 
         [SetUp]

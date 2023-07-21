@@ -6,6 +6,7 @@ using MDP.OMDb.Model;
 using MDP.ServiceModel;
 using MDP.Videos.Contract;
 using Moq;
+using Moq.AutoMock;
 using Shouldly;
 
 namespace MDP.Manager.Tests
@@ -14,7 +15,6 @@ namespace MDP.Manager.Tests
     public class MovieManagerTests
     {
         private IMovieManager _movieManager;
-        private IMapper _mapper;
         private Mock<IOMDbService> _omdbServiceMock;
         private Mock<IYoutubeService> _youtubeServiceMock;
         private Mock<ICacheClient> _cacheClientMock;
@@ -22,21 +22,16 @@ namespace MDP.Manager.Tests
         [OneTimeSetUp]
         public void SetupFixture()
         {
-            _omdbServiceMock = new Mock<IOMDbService>();
-            _youtubeServiceMock = new Mock<IYoutubeService>();
-            _cacheClientMock = new Mock<ICacheClient>();
+            var mocker = new AutoMocker();
 
             var config = new MapperConfiguration(cfg => { cfg.AddProfile<OMDbProfile>(); });
+            mocker.Use(config.CreateMapper());
 
-            _mapper = config.CreateMapper();
+            _movieManager = mocker.CreateInstance<MovieManager>();
 
-            _movieManager = new MovieManager(_omdbServiceMock.Object, _youtubeServiceMock.Object,
-                _cacheClientMock.Object, _mapper);
-        }
-
-        [SetUp]
-        public void Setup()
-        {
+            _omdbServiceMock = mocker.GetMock<IOMDbService>();
+            _youtubeServiceMock = mocker.GetMock<IYoutubeService>();
+            _cacheClientMock = mocker.GetMock<ICacheClient>();
         }
 
         [TearDown]
@@ -118,7 +113,7 @@ namespace MDP.Manager.Tests
             _youtubeServiceMock.Setup(x => x.SearchVideosAsync(It.IsAny<string>()))
                 .ReturnsAsync(() => new List<Video>()
                 {
-                    new Video { Title = "The Wall 2012 Full movie" }
+                    new() { Title = "The Wall 2012 Full movie" }
                 });
 
             _cacheClientMock.Setup(x => x.GetAsync<Movie?>(It.IsAny<string>())).ReturnsAsync(() => null);
